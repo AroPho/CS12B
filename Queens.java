@@ -23,11 +23,13 @@ class Queens {
                             B[i + x][r + x] = B[i + x][r + x] - 1;
                         }
                     }
-                    for(int k = i - 1; k > 0; k--){
-
+                    for(int x = 1; x < B.length; x++){
+                        if((i - x) < B.length && (r - x) < B.length) {
+                            B[i - x][r - x] = B[i - x][r - x] - 1;
+                        }
                     }
                     placeQueen(B, i++, 1);
-                    removeQueen(B, i++, 1);
+                    removeQueen(B, i--, 0);
                 }
                 count++;
             }
@@ -39,6 +41,7 @@ class Queens {
     }
 
     static void removeQueen(int[][] B, int i, int j){
+        int x = B[i][j];
 
     }
     static void printBoard(int[][] B){
