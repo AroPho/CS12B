@@ -1,27 +1,66 @@
-import java.io.File;
-import java.io.IOException;
-import java.io.LineNumberReader;
-import java.io.FileReader;
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.lang.*;
+import java.util.*;
 
 
 class Queens {
 
     static void placeQueen(int[][] B, int i, int j){
+        int count = 0;
+        for(int r = 1; r <= B.length; r++){
+            if(r < B.length){
+                if (B[i][r] == 0) {
+                    B[i][0] = r;
+                    B[i][r] = 1;
+                    if (i == B.length - 1) {
+                        printBoard(B);
+                        return;
+                    }
+                    for(int k = i + 1; k < B.length; k++) {
+                            B[k][r] = B[k][r] - 1;
+                    }
+                    for(int x = 1; x < B.length; x++){
+                        if((i + x) < B.length && (r + x) < B.length) {
+                            B[i + x][r + x] = B[i + x][r + x] - 1;
+                        }
+                    }
+                    for(int k = i - 1; k > 0; k--){
 
+                    }
+                    placeQueen(B, i++, 1);
+                    removeQueen(B, i++, 1);
+                }
+                count++;
+            }
+
+        }
+        if(count < 1){
+            removeQueen(B, i--, 0);
+        }
     }
 
     static void removeQueen(int[][] B, int i, int j){
 
     }
     static void printBoard(int[][] B){
-        
+        System.out.print("(");
+        for(int j = 1; j < B.length;j++){
+            if( j != 4) {
+                System.out.print(B[0][j] + ", ");
+            }
+            else{
+                System.out.print(B[0][j] + ")");
+            }
+        }
     }
 
     static int findSolutions(int[][] B, int i, String mode){
         int n = 0;
-
+        if(mode.compareTo("-v") == 0){
+            while(i < B.length){
+                placeQueen(B, i,1);
+                i++;
+            }
+        }
         return n;
     }
 
@@ -32,13 +71,11 @@ class Queens {
             }
             int n;
             if(args[0].compareTo("-v") == 0){
-                int[][] B = new int[Integer.parseInt(args[1])][Integer.parseInt(args[1])];
-                n = Integer.parseInt(args[1]);
-                findSolutions(B, n, args[0]);
+                int[][] B = new int[Integer.parseInt(args[1]) + 1][Integer.parseInt(args[1]) + 1];
+                findSolutions(B, 1, args[0]);
             } else {
-                int[][] B = new int[Integer.parseInt(args[0])][Integer.parseInt(args[0])];
-                n = Integer.parseInt(args[0]);
-                findSolutions(B, n, "");
+                int[][] B = new int[Integer.parseInt(args[0]) + 1][Integer.parseInt(args[0]) + 1];
+                findSolutions(B, 1, "");
             }
     }
 
