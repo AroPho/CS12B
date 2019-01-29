@@ -1,6 +1,6 @@
 public class Main {
 
-    /*static int binarySearch(String arr[], int l, int r, String x)
+    static int binarySearch(String arr[], int l, int r, String x)
     {
         if (r >= l) {
             int mid = l + (r - l) / 2;
@@ -23,7 +23,7 @@ public class Main {
         // We reach here when element is not present
         // in array
         return -1;
-    }*/
+    }
 
 
     public static void main(String[] args) {
