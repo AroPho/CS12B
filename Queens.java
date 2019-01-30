@@ -1,85 +1,100 @@
-import java.lang.*;
-import java.util.*;
-
-
 class Queens {
 
     static void placeQueen(int[][] B, int i, int j){
         int count = 0;
-        for(int r = 1; r <= B.length; r++){
-            if(r < B.length){
-                if (B[i][r] == 0) {
-                    B[i][0] = r;
-                    B[i][r] = 1;
-                    if (i == B.length - 1) {
-                        printBoard(B);
-                        return;
-                    }
-                    for(int k = i + 1; k < B.length; k++) {
-                            B[k][r] = B[k][r] - 1;
-                    }
-                    for(int x = 1; x < B.length; x++){
-                        if((i + x) < B.length && (r + x) < B.length) {
-                            B[i + x][r + x] = B[i + x][r + x] - 1;
-                        }
-                    }
-                    for(int x = 1; x < B.length; x++){
-                        if((i - x) < B.length && (r - x) < B.length) {
-                            B[i - x][r - x] = B[i - x][r - x] - 1;
-                        }
-                    }
-                    placeQueen(B, i++, 1);
-                    removeQueen(B, i--, 0);
-                }
-                count++;
+        int n = B.length;
+        if( i > (n - 1)){
+            if(B[0][1] == 1) {
+                printBoard(B);
             }
+            B[0][0] = B[0][0] + 1;
+        }
+        else{
+            for( int c = 1; c < n; c++){
+                if(B[i][c] == 0){
+                    B[i][0] = c;
+                    B[i][c] = 1;
+                    for(int k = 1; k < n; k++){
+                        if((i + k) < n){
+                            B[i + k][c] = B[i + k][c] - 1;
+                        }
+                    } for( int a = 1; a < n; a++){
+                        if((i + a) < n && (c + a) < n){
+                            B[i + a][c + a] = B[i + a][c + a] - 1;
+                        }
+                    } for( int a = 1; a < n; a++) {
+                        if ((i + a) < n && (c - a) > 0) {
+                            B[i + a][c - a] = B[i + a][c - a] - 1;
+                        }
+                    }
+                    placeQueen(B, i + 1, 1);
+                    removeQueen(B, i, c);
+                }
+            }
+        }
 
-        }
-        if(count < 1){
-            removeQueen(B, i--, 0);
-        }
     }
+
 
     static void removeQueen(int[][] B, int i, int j){
-        int x = B[i][j];
+        int n = B.length;
+        B[i][0] = 0;
+        B[i][j] = 0;
 
+        for(int k = 1; k < n; k++){
+            if((i + k) < n) {
+                B[i + k][j] = B[i + k][j] + 1;
+            }
+        } for(int c = 1; c < n; c++){
+            if((i + c) < n && (j + c) < n){
+                B[i + c][j + c] = B[i + c][j + c] + 1;
+            }
+        } for(int c = 1; c < n; c++) {
+            if ((i + c) < n && (j - c) > 0) {
+                B[i + c][j - c] = B[i + c][j - c] + 1;
+            }
+        }
     }
+
     static void printBoard(int[][] B){
         System.out.print("(");
         for(int j = 1; j < B.length;j++){
-            if( j != 4) {
-                System.out.print(B[0][j] + ", ");
+            if( j != B.length - 1) {
+                System.out.print(B[j][0] + ", ");
             }
             else{
-                System.out.print(B[0][j] + ")");
+                System.out.println(B[j][0] + ")");
             }
         }
     }
 
     static int findSolutions(int[][] B, int i, String mode){
-        int n = 0;
         if(mode.compareTo("-v") == 0){
-            while(i < B.length){
-                placeQueen(B, i,1);
-                i++;
-            }
+            B[0][1] = 1;
         }
+        placeQueen(B, i, 1);
+        int n = B[0][0];
         return n;
     }
 
-    public static void main(String[] args) {
-            if(args.length < 1) {
-                System.out.println("Usage: Queens [-v] number");
-                System.exit(1);
-            }
-            int n;
-            if(args[0].compareTo("-v") == 0){
-                int[][] B = new int[Integer.parseInt(args[1]) + 1][Integer.parseInt(args[1]) + 1];
-                findSolutions(B, 1, args[0]);
-            } else {
-                int[][] B = new int[Integer.parseInt(args[0]) + 1][Integer.parseInt(args[0]) + 1];
-                findSolutions(B, 1, "");
-            }
+    public static void main(String[] args){
+        if(args.length < 1){
+            System.out.println("Usage: Queens [-v] number");
+            System.exit(1);
+        }
+        int n;
+        if(args[0].compareTo("-v") == 0) {
+            int[][] B = new int[Integer.parseInt(args[1]) + 1][Integer.parseInt(args[1]) + 1];
+            n = findSolutions(B, 1, "-v");
+        }
+        else {
+            int[][] B = new int[Integer.parseInt(args[0]) + 1][Integer.parseInt(args[0]) + 1];
+            n = findSolutions(B, 1, "");
+        }
+        System.out.println(args[0] + "-Queens has " + n + " solutions");
+
     }
+
+
 
 }
