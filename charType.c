@@ -1,26 +1,3 @@
-//-----------------------------------------------------------------------------
-// alphaNum.c
-// extracts alpha-numeric characters from each line of the input file
-// and places them in the output file.
-//
-// Recall the program FileIO.c from lab3 used fscanf to parse words in
-// a file and then process them.  However the function fscanf is not
-// appropriate when you want to read an entire line from a file as a
-// string.  In this program we use another IO function from stdio.h called
-// fgets() for this purpose.  Its prototype is:
-//
-//         char* fgets(char* s, int n, FILE* stream);
-//
-// fgets() reads up to n-1 characters from stream and places them in
-// the character array ponted to by s.  Characters are read until either
-// a newline or an EOF is read, or until the specified limit is reached.
-// After the characters have been read, a null character '\0' is placed
-// in the array immediately after the last character read.  A newline
-// character in stream will be retained and placed in s.  If successful,
-// fgets() returns the string s, and a NULL pointer is returned upon
-// failure.  See fgets in section 3c of the unix man pages for more.
-//
-//-----------------------------------------------------------------------------
 
 #include<stdio.h>
 #include<stdlib.h>
@@ -31,6 +8,7 @@
 
 // function prototype
 void extract_alpha_num(char* s, char* a);
+void extract_chars(char* s, char* a, char* d, char*p, char* w);
 
 // function main which takes command line arguments
 int main(int argc, char* argv[]){
@@ -61,16 +39,20 @@ int main(int argc, char* argv[]){
 
    // allocate strings line and alpha_num on the heap
    line = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
-   alpha_num = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
-   assert( line!=NULL && alpha_num!=NULL );
+   alphabet = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
+   number = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
+   punctuation = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
+   white = calloc(MAX_STRING_LENGTH+1, sizeof(char) );
+   assert( line!=NULL && alphabet!=NULL && number!=NULL && punctuation!=NULL && white!=NULL);
    int count = 1;
    // read each line in input file, extract alpha-numeric characters
    while( fgets(line, MAX_STRING_LENGTH, in) != NULL ){
       extract_chars(line, alphabet, number, punctuation, white);
+      int a = alphabet[0], n = number[0], p = punctuation[0], w = white[0];
       fprintf(out, "line %i contains:\n", count);
-      fprintf(out, "%i alphabetic characters: %s\n",a , alpha);
-      fprintf(out, "%i numeric characters: %s\n",n , num);
-      fprintf(out, "%i punctuation characters: %s\n",p , punc);
+      fprintf(out, "%i alphabetic characters: %s\n",a , alphabet);
+      fprintf(out, "%i numeric characters: %s\n",n , number);
+      fprintf(out, "%i punctuation characters: %s\n",p , punctuation);
       fprintf(out, "%i whitespace characters: %s\n\n",w , white);
       count++;
    }
@@ -102,8 +84,8 @@ void extract_alpha_num(char* s, char* a){
 void extract_chars(char* s, char* a, char* d, char*p, char* w){
     int x = 0, alph = 1, dig = 1, punc = 1, wh = 1;
     int ac = 0, dc = 0, pc = 0, wc = 0;
-    while(s[x] != '\0' && i < MAX_STRING_LENGTH){
-        if(s[x] >= 'a' && s[x]  <= 'z' || s[x] >= 'A' && s[x]  <= 'Z'){
+    while(s[x] != '\0' && x < MAX_STRING_LENGTH){
+        if((s[x] >= 'a' && s[x]  <= 'z') || (s[x] >= 'A' && s[x]  <= 'Z')){
             a[alph] = s[x];
             a[0] = ac++;
             alph++;
@@ -121,7 +103,7 @@ void extract_chars(char* s, char* a, char* d, char*p, char* w){
             wh++;
             x++;
         }
-        else{
+        if((s[x] >= '!' && s[x]  <= '/') || (s[x] >= ':' && s[x]  <= '@') || (s[x] >= '[' && s[x]  <= '`') ||(s[x] >= '{' && s[x]  <= '~')){
             p[punc] = s[x];
             p[0] = pc++;
             punc++;
