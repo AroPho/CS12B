@@ -45,9 +45,7 @@ public class Dictionary implements DictionaryInterface {
     }
     public String lookup(String key) throws IndexOutOfBoundsException{
         int index = Integer.parseInt(key);
-        if( index<1 || index>numItems ){
-            /*throw new IndexOutOfBoundsException(
-                    "IntegerList Error: lookup() called on invalid index: " + index);*/
+        if( index<1 ){
             return null;
         }
         Node N = findKey(key);
@@ -59,18 +57,20 @@ public class Dictionary implements DictionaryInterface {
     public void insert(String key, String value)throws IndexOutOfBoundsException{
         int index = Integer.parseInt(key);
         if(numItems==0) {
-            Node N = new Node(key + " " + value + "\n");
+            Node N = new Node(key + " " + value);
             N.next = head;
             head = N;
         }else if(index == 1){
-            Node N = new Node(key + " " + value + "\n");
+            Node N = new Node(key + " " + value);
             N.next = head;
             head = N;
-        }
-        else{
+        }else if(findKey(key).item.substring(0, findKey(key).item.indexOf(" ")).compareTo(key) == 0){
+            throw new DuplicateKeyException(
+                    "cannot insert duplicate keys");
+        }else{
             Node P = findKey(Integer.toString(index - 1));
             Node C = P.next;
-            P.next = new Node(key + " " + value + "\n");
+            P.next = new Node(key + " " + value);
             P = P.next;
             P.next = C;
         }
@@ -78,10 +78,10 @@ public class Dictionary implements DictionaryInterface {
     }
     public void delete(String key) throws IndexOutOfBoundsException{
         int index = Integer.parseInt(key);
-        /*if( index<1 || index>numItems ){
-            throw new IndexOutOfBoundsException(
-                    "IntegerList Error: remove() called on invalid index: " + index);
-        }*/
+        if( index<1 || (findKey(key).item.substring(0, findKey(key).item.indexOf(" ")).compareTo(key) != 0)){
+            throw new KeyNotFoundException(
+                    "cannot delete non-existent key");
+        }
         if(index==1){
             Node N = head;
             head = head.next;
@@ -102,7 +102,7 @@ public class Dictionary implements DictionaryInterface {
         if( H==null ){
             return "";
         }else{
-            return (H.item + " " + myString(H.next));
+            return (H.item + "\n" +myString(H.next));
         }
     }
 
@@ -115,6 +115,7 @@ public class Dictionary implements DictionaryInterface {
         A.insert("5","a");
         A.insert("6","a");
         A.insert("1","a");
+        //A.lookup("2");
         //System.out.println(A);
         A.insert("4", "b");
         A.insert("2","b");
