@@ -5,10 +5,12 @@ public class Dictionary implements DictionaryInterface {
 
     private class Node{
         String item;
+        String key;
         Node next;
 
-        Node(String x){
-            item = x;
+        Node(String x, String y){
+            key = x;
+            item = y;
             next = null;
         }
     }
@@ -23,15 +25,10 @@ public class Dictionary implements DictionaryInterface {
 
     private Node findKey(String key){
         Node N = head;
-        Node P = N;
         for(int i = 1; i < numItems; i++){
-            if(N.item.substring(0, N.item.indexOf(" ")).compareTo(key) == 0) {
+            if(N.key.compareTo(key) == 0) {
                 return N;
-            }else if(Integer.parseInt(N.item.substring(0, N.item.indexOf(" "))) > Integer.parseInt(key)){
-
-                return P;
             }
-            P = N;
             N = N.next;
         }
         return N;
@@ -49,36 +46,39 @@ public class Dictionary implements DictionaryInterface {
             return null;
         }
         Node N = findKey(key);
-        if(N.item.substring(0, N.item.indexOf(" ")).compareTo(key)== 0){
-            return N.item.substring(N.item.indexOf(" ") + 1);
+        if(N.key.compareTo(key)== 0){
+            return N.item;
         }
         return null;
     }
     public void insert(String key, String value)throws IndexOutOfBoundsException{
-        int index = Integer.parseInt(key);
-        if(numItems==0) {
-            Node N = new Node(key + " " + value);
-            N.next = head;
-            head = N;
-        }else if(index == 1){
-            Node N = new Node(key + " " + value);
-            N.next = head;
-            head = N;
-        }else if(findKey(key).item.substring(0, findKey(key).item.indexOf(" ")).compareTo(key) == 0){
-            throw new DuplicateKeyException(
-                    "cannot insert duplicate keys");
-        }else{
-            Node P = findKey(Integer.toString(index - 1));
-            Node C = P.next;
-            P.next = new Node(key + " " + value);
-            P = P.next;
-            P.next = C;
+        try {
+            int index = Integer.parseInt(key);
+            if(numItems==0) {
+                Node N = new Node(key, value);
+                N.next = head;
+                head = N;
+            }else if(index == 1){
+                Node N = new Node(key, value);
+                N.next = head;
+                head = N;
+            }else if(findKey(key).key.compareTo(key) == 0){
+                throw new DuplicateKeyException(
+                        "cannot insert duplicate keys");
+            }else{
+                Node P = findKey(key);
+                Node C = P.next;
+                P.next = new Node(key, value);
+                P = P.next;
+                P.next = C;
+            }
+            numItems++;
+        }catch (NumberFormatException e){
         }
-        numItems++;
     }
     public void delete(String key) throws IndexOutOfBoundsException{
         int index = Integer.parseInt(key);
-        if( index<1 || (findKey(key).item.substring(0, findKey(key).item.indexOf(" ")).compareTo(key) != 0)){
+        if( index<1 || (findKey(key).key.compareTo(key) != 0)){
             throw new KeyNotFoundException(
                     "cannot delete non-existent key");
         }
@@ -87,7 +87,7 @@ public class Dictionary implements DictionaryInterface {
             head = head.next;
             N.next = null;
         }else{
-            Node P = findKey(Integer.toString(index - 1));
+            Node P = head;
             Node N = P.next;
             P.next = N.next;
             N.next = null;
@@ -102,17 +102,17 @@ public class Dictionary implements DictionaryInterface {
         if( H==null ){
             return "";
         }else{
-            return (H.item + "\n" +myString(H.next));
+            return (H.key + " " + H.item + "\n" +myString(H.next));
         }
     }
 
     public String toString(){
         return myString(head);
     }
-    public static void main(String[] args){
+    /*public static void main(String[] args){
         Dictionary A = new Dictionary();
-        A.insert("3","a");
-        A.insert("5","a");
+        A.insert("1 ","a");
+        *//*A.insert("5","a");
         A.insert("6","a");
         A.insert("1","a");
         //A.lookup("2");
@@ -120,7 +120,7 @@ public class Dictionary implements DictionaryInterface {
         A.insert("4", "b");
         A.insert("2","b");
         //System.out.println(A);
-        A.delete("6");
-        System.out.println(A);
-    }
+        A.delete("6");*//*
+        System.out.println(A.isEmpty());
+    }*/
 }

@@ -77,21 +77,36 @@ class Queens {
         return n;
     }
 
+
     public static void main(String[] args){
-        if(args.length < 1){
-            System.out.println("Usage: Queens [-v] number");
+        if(args.length < 1 /*|| args[0].compareTo("-v") != 0*/){
+            System.out.println("Usage: Queens [-v] number\nOption: -v verbose output, print all solutions");
             System.exit(1);
         }
         int n;
-        if(args[0].compareTo("-v") == 0) {
-            int[][] B = new int[Integer.parseInt(args[1]) + 1][Integer.parseInt(args[1]) + 1];
-            n = findSolutions(B, 1, "-v");
+        if(args[0].compareTo("-v") == 0 && args.length == 2) {
+            try{
+                int[][] B = new int[Integer.parseInt(args[1]) + 1][Integer.parseInt(args[1]) + 1];
+                n = findSolutions(B, 1, "-v");
+                System.out.println(args[1] + "-Queens has " + n + " solutions");
+            }catch (NumberFormatException ex) {
+                System.out.println("Usage: Queens [-v] number\nOption: -v verbose output, print all solutions");
+                System.exit(1);
+            }
+
         }
         else {
-            int[][] B = new int[Integer.parseInt(args[0]) + 1][Integer.parseInt(args[0]) + 1];
-            n = findSolutions(B, 1, "");
+            try{
+                int[][] B = new int[Integer.parseInt(args[0]) + 1][Integer.parseInt(args[0]) + 1];
+                n = findSolutions(B, 1, "");
+                System.out.println(args[0] + "-Queens has " + n + " solutions");
+
+            }catch (NumberFormatException ex) {
+                System.out.println("Usage: Queens [-v] number\nOption: -v verbose output, print all solutions");
+                System.exit(1);
+            }
         }
-        System.out.println(args[0] + "-Queens has " + n + " solutions");
+
 
     }
 
