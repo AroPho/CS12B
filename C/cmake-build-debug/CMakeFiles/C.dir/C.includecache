@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Users/aaron/Desktop/School/CS12B/src/C/Dictionary.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+assert.h
+-
+Dictionary.h
+C:/Users/aaron/Desktop/School/CS12B/src/C/Dictionary.h
+
+C:/Users/aaron/Desktop/School/CS12B/src/C/Dictionary.h
+
+C:/Users/aaron/Desktop/School/CS12B/src/C/library.c
+library.h
+C:/Users/aaron/Desktop/School/CS12B/src/C/library.h
+stdio.h
+-
+
+C:/Users/aaron/Desktop/School/CS12B/src/C/library.h
+
+C:/Users/aaron/Desktop/School/CS12B/src/C/test.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+ctype.h
+-
+
