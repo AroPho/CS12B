@@ -31,6 +31,7 @@
 
 // function prototype
 void extract_alpha_num(char* s, char* a);
+void extract_chars(char* s, char* a, char* d, char*p, char* w);
 
 // function main which takes command line arguments
 int main(int argc, char* argv[]){
