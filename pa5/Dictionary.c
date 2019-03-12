@@ -4,7 +4,7 @@
 #include "Dictionary.h"
 #include "string.h"
 
-const int tableSize=101;
+#define tableSize 101
 
 typedef struct NodeObj{
     char* key;
@@ -108,12 +108,13 @@ char* lookup(Dictionary D, char* k){
     int hk = hash(k);
     if(D->table[hk] != NULL){
         Node temp = D->table[hk];
-        while(temp->next != NULL){
-            if(strcmp(temp->key, k) == 0){
+        while(temp != NULL){
+            if(/*strcmp(temp->key, k) == 0*/ temp->key == k){
                 char* val = temp->value;
-                freeNode(temp);
+                //freeNode(temp);
                 return val;
             }
+            temp = temp->next;
         }
     }
     return  NULL;
@@ -145,14 +146,14 @@ void delete(Dictionary D, char* k){
     Node P = NULL;
     int hashk = hash(k);
     Node temp = D->table[hashk];
-    if(strcmp(temp->key,k)){
+    if(/*strcmp(temp->key,k) == 0*/ temp->key == k){
         D->table[hashk] = temp->next;
         freeNode(temp);
         D->numItems--;
         return;
     }else {
         while (temp != NULL) {
-            if (strcmp(temp->key, k) == 0) {
+            if (strcmp(temp->key, k) == 0 || temp->key == k) {
                 P->next = temp->next;
                 freeNode(temp);
                 D->numItems--;
@@ -176,19 +177,26 @@ void makeEmpty(Dictionary D){
     D->numItems = 0;
 }
 
+void printNode(FILE *out, Node n) {
+    fprintf(out, "%s %s\n", n->key, n->value);
+}
+
 // printDictionary()
 // pre: none
 // prints a text representation of D to the file pointed to by out
 void printDictionary(FILE* out, Dictionary D){
-    Node N = NULL;
-    for(int x = 0; x < D->numItems; x++){
-        if(D->table[x]!= NULL){
-            N = D->table[x];
-            while(N != NULL){
-                fprintf(out, "%s %s\n", N->key, N->value);
-                N = N->next;
+    for (int i = 0; i < tableSize; i++) {
+        if (isEmpty(D) == 0) {
+            if (D->table[i] != NULL) {
+                printNode(out, D->table[i]);
+                if (D->table[i]->next != NULL) {
+                    Node temp = D->table[i]->next;
+                    while (temp != NULL) {
+                        printNode(out, temp);
+                        temp = temp->next;
+                    }
+                }
             }
         }
     }
-    freeNode(N);
 }
